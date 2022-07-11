@@ -1,0 +1,83 @@
+# Lecture 4 CNN
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torchvision.datasets import CIFAR10
+from torchvision import transforms
+from torch.utils.data import DataLoader
+from torch import optim
+import time
+import matplotlib.pyplot as plt
+import numpy as np
+
+class Net(nn.Module):
+    def __init__(self,size):
+        super().__init__()
+        self.size = size
+        self.fc1 = nn.Linear(self.size*self.size,1024)
+        self.fc2 = nn.Linear(1024,512)
+        self.fc3 = nn.Linear(512,10)
+
+    def forward(self,x):
+        x = x.view(-1,self.size*self.size)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+cifar10_data = CIFAR10(root="./data",train=True,download=True, transform=transforms.ToTensor())
+cifar10_classes = np.array(["airplane","automobile","bird","cat","deer","dog","frog","horse","ship","truck"])
+
+print("#train : ",len(cifar10_data)," #test : ",len(cifar10_classes))
+
+#img_size = 28
+n_image = 25
+cifar10_loader = DataLoader(cifar10_data,batch_size=n_image,shuffle=True)
+dataiter = iter(cifar10_loader)
+image,labels = dataiter.next()
+
+plt.figure(figsize=(10,10))
+for i in range(n_image):
+    plt.subplot(5,5,i+1)
+    plt.imshow(np.transpose(image[i],(1,2,0)))
+    label = cifar10_classes[labels[i]]
+    plt.title(label)
+    plt.tick_params(labelbottom=False,labelleft=False,bottom=False,left=False)
+
+plt.show()
+
+net = Net()
+loss_fnc = nn.CrossEntropyLoss()
+optimizer = optim.Adam(net.parameters())
+
+hist_loss_train = list()
+hist_loss_test = list()
+
+for i in range(n_epoch):
+    net.train()
+    loss_train = 0
+    for j, (x,t) in enumerate(train_loader):
+        x,t = x.cuda(),t.cuda()
+        y = net(x)
+        loss = loss_fnc(y,t)
+        loss_train += loss.item()
+        optmizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    loss_train /= j+1
+    hist_loss_train.append(loss_train)
+
+    net.eval()
+    loss_test = 0
+    for j, (x,t) in enumerate(test_loader):
+        x,t = x.cuda(),t.cuda()
+        y = net(x)
+        loss = loss_fnc(y,t)
+        loss_test += loss.item()
+    loss_test /= j+1
+    hist_loss_test.append(loss_test)
+
+    if i%1 == 0:
+        print("#epoch",i,"Loss_Train:",loss_train,"Loss_Test:",loss_test)
+
