@@ -101,7 +101,7 @@ def generate_images():
     plt.figure(figsize=(20,2))
     for i in range(n_disp):
         ax = plt.subplot(1,n_disp,i+1)
-        plt.imshow(disp_imgs[i],cmap="Gryes_r",vmin=0.0,vmax=1.0)
+        plt.imshow(disp_imgs[i],cmap="Greys_r",vmin=0.0,vmax=1.0)
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
     plt.show()
@@ -115,8 +115,8 @@ def generate_images():
             gen_imgs[i,j+n_time] = net(x)[0]
         ax = plt.subplot(1,n_disp,i+1)
         plt.imshow(gen_imgs[i].detach(),cmap="Greys_r",vmin=0.0,vmax=1.0)
-        ax.get_xaxis().set_visibile(False)
-        ax.get_yaxis().set_visibile(False)
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
 
 hist_loss_train = list()
 hist_loss_test = list()
