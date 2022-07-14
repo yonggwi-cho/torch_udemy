@@ -12,7 +12,7 @@ from torch import optim
 class Net(nn.Module):
     def __init__(self,n_in,n_mid,n_out) -> None:
         super().__init__()
-        self.rnn = nn.LSTM(
+        self.rnn = nn.GRU(
             input_size=n_in,
             hidden_size=n_mid,
             batch_first=True,
@@ -121,7 +121,7 @@ def generate_images(save=False):
         plt.pause(1)
         plt.clf()
     elif save == True :
-        plt.savefig("test.png")
+        plt.savefig("image_GRU.png")
     
 hist_loss_train = list()
 hist_loss_test = list()
