@@ -20,7 +20,7 @@ class Net(nn.Module):
         self.fc = nn.Linear(n_mid,n_out)
 
     def forward(self,x):
-        y_rnn,(h,c) = self.rnn(x,None)
+        y_rnn,h_n = self.rnn(x,None)
         y = self.fc(y_rnn[:,-1,:])
         return y
     
