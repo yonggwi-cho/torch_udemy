@@ -5,6 +5,11 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch import optim
+
 affine = transforms.RandomAffine([-15,15],scale=(0.8,1.2))
 flip = transforms.RandomHorizontalFlip(p=0.5)
 normalize = transforms.Normalize((0.0,0.0,0.0),(1.0,1.0,1.0))
@@ -19,9 +24,6 @@ cifar10_test = CIFAR10("./data",train=False,download=True,transform=transform_te
 batch_size = 64
 train_loader = DataLoader(cifar10_train,batch_size=batch_size,shuffle=True)
 test_loader = DataLoader(cifar10_test,batch_size=batch_size,shuffle=False)
-
-import torch.nn as nn
-import torch.nn.functional as F
 
 class Net(nn.Module):
     def __init__(self) -> None:
@@ -45,8 +47,6 @@ net = Net()
 net.cuda(1)
 n_epoch = 100
 
-from torch import optim
-
 loss_fnc = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters())
 
@@ -69,6 +69,9 @@ for i in range(n_epoch):
         optimizer.step()
     loss_train /= j+1
     hist_loss_train.append(loss_train)
+
+    if i%1 == 0 :
+        print("Epoch:",i,"Loss_Train:",loss_train)
 
     net.eval()
     y_test = net(x_test)
@@ -96,7 +99,7 @@ for i, (x,t) in enumerate(test_loader):
     total += len(x)
 print("correct rate : ",str(correct/total*100)+"%")
 
-import torch
+
 for key in net.state_dict():
     print(key,":",net.state_dict()[key].size())
 print(net.state_dict()["conv1.weigh"][0])
