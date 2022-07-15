@@ -121,7 +121,7 @@ def generate_images(save=False):
         plt.pause(1)
         plt.clf()
     elif save == True :
-        plt.savefig("test.png")
+        plt.savefig("image_LSTM.png")
     
 hist_loss_train = list()
 hist_loss_test = list()
