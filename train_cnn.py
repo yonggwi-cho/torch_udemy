@@ -33,12 +33,13 @@ class Net(nn.Module):
         self.conv2 = nn.Conv2d(6,16,5)
         self.fc1   = nn.Linear(16*5*5,256)
         self.dropout = nn.Dropout(p=0.5)
-        self.fc2 = nn.Linear(16*5*5,10)
+        self.fc2 = nn.Linear(256,10)
 
     def forward(self,x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = x.view(-1,16*5*5)
+        x = self.fc1(x)
         x = self.dropout(x)
         x = self.fc2(x)
         return x 
@@ -78,17 +79,6 @@ for i in range(n_epoch):
     loss_test = loss_fnc(y_test,t_test).item()
     hist_loss_test.append(loss_test)
 
-
-# loss plot
-plt.plot(range(len(hist_loss_train)),hist_loss_train,label="Train")
-plt.plot(range(len(hist_loss_test)),hist_loss_test,label="Test")
-plt.legend()
-
-plt.xlabel("Epochs")
-plt.ylabel("Loss")
-plt.savefig("./result/loss_cnn.png")
-plt.show()
-
 correct =  0.0
 total = 0.0
 net.eval()
@@ -105,5 +95,13 @@ print(net.state_dict()["conv1.weight"][0])
 
 torch.save(net.state_dict(),"./result/model_cnn.pth")
 
+# loss plot
+plt.plot(range(len(hist_loss_train)),hist_loss_train,label="Train")
+plt.plot(range(len(hist_loss_test)),hist_loss_test,label="Test")
+plt.legend()
 
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.savefig("./result/loss_cnn.png")
+plt.show()
 
