@@ -39,7 +39,7 @@ class Net(nn.Module):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = x.view(-1,16*5*5)
-        x = self.fc1(x)
+        x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
         return x 
