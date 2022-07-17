@@ -93,16 +93,15 @@ correct =  0.0
 total = 0.0
 net.eval()
 for i, (x,t) in enumerate(test_loader):
-    x,t = x.cuda(),t.cuda()
+    x,t = x.cuda(1),t.cuda(1)
     y = net(x)
-    correct += (y.argmax(i)==t).sum().item()
+    correct += (y.argmax(1)==t).sum().item()
     total += len(x)
 print("correct rate : ",str(correct/total*100)+"%")
 
-
 for key in net.state_dict():
     print(key,":",net.state_dict()[key].size())
-print(net.state_dict()["conv1.weigh"][0])
+print(net.state_dict()["conv1.weight"][0])
 
 torch.save(net.state_dict(),"./result/model_cnn.pth")
 
