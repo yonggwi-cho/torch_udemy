@@ -31,7 +31,7 @@ class Net(nn.Module):
         self.conv2 = nn.Conv2d(6, 16, 5)
         self.fc1 = nn.Linear(16*5*5, 256)
         self.dropout = nn.Dropout(p=0.5)
-        self.fc2 = nn.Linear(256, 10)
+        self.fc2 = nn.Linear(256,10)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
